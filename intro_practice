@@ -1,0 +1,32 @@
+DROP TABLE FRIENDS;
+
+CREATE TABLE FRIENDS (
+    ID INTEGER AUTO_INCREMENT PRIMARY KEY ,
+    NAME VARCHAR(25) NOT NULL,
+    BRANCH VARCHAR(25)   DEFAULT 'UNDECIDED'
+)
+;
+
+INSERT INTO FRIENDS(NAME) VALUES('appaa');
+
+
+SELECT * FROM FRIENDS;
+
+UPDATE FRIENDS
+SET BRANCH ='SSLC'
+WHERE ID =4 OR NAME='TATA';
+
+
+delete from friends
+where id=1;
+
+select branch from friends;
+
+
+select friends.name
+from friends
+order by name desc;
+
+select *
+from friends
+where id=1;
