@@ -1,0 +1,27 @@
+create table employee(
+    emp_id INT primary key,
+    first_name varchar(255),
+    last_name varchar(255),
+    birth_date DATE,
+    sex  varchar(1),
+    salary INT,
+    super_id INT ,# dont yet declare as foreign key because you havent created the branch table
+    branch_id int #same here
+);
+
+insert into employee values(101,'Varada','Vaidya','1996-07-11','M',100000,null,102);
+
+select * from TriggerTable;
+
+create table TriggerTable(
+    message VARCHAR(255),
+    Time TIMESTAMP);
+
+
+show tables;
+
+alter table TriggerTable add second_message VARCHAR(255) ;
+insert into employee values(103,'Jessica','Chastain','1996-07-11','F',100000,null,101);
+
+
+
