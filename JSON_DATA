@@ -1,0 +1,45 @@
+create table products(
+    product_id INT,
+    description JSON
+);
+
+
+
+#inserting JSON Data
+insert into products(product_id,description) values(101,'{"color":"Blue","Price":50000, "item_name":"iPhone"}');
+
+insert into products values(103,'{"color":"Green","Price":6000,"dimension_LxW":"[12,35]","item_name":"laptop"}');
+
+select * from products;
+
+#Retrieving JSON data
+
+select 
+    description-> '$.color' as COLOR
+from products;
+
+
+#set JSON data or UPDATE
+
+update products
+set description =JSON_SET(description,'$.color','Black')
+where product_id=103;
+
+
+#ADD new key value pair
+
+update products
+set description = JSON_SET(description,"$.charge_cap","4000mAh")
+where product_id=101;
+
+
+#remove key
+
+Update products
+set description = JSON_REMOVE(description,"$.color")
+where product_id=101;
+
+#search inside a JSON 
+
+select * from products
+where JSON_CONTAINS_PATH(description,"one","$.color");
