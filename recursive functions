@@ -1,0 +1,71 @@
+
+--increase salary...add 10 percent bonus 
+
+create or replace function updated_salary(salary int, bonus_percentage int)
+returns int as $$
+begin 
+      salary = salary * (1+round((bonus_percentage::numeric/100),2));
+      return salary; 
+  end $$ 
+  language plpgsql;
+
+select employee.*,
+  updated_salary(employee.salary,10) as updated_salary_to_table   
+  from employee;
+  
+
+--recursive SQL queries 
+
+
+with recursive numbers as 
+                          (select 1 as n
+                          union all 
+                          select n+1 
+                          from numbers where n<10
+                          )
+
+select * from numbers;
+
+
+create table employees(
+id int,
+name varchar(20),
+mgr_id int,
+salary int);
+
+insert into employees values(1,'Sri',null,10000);
+insert into employees values(2,'marc',5,5000);
+insert into employees values(3,'nill',5,5000);
+insert into employees values(4,'son ',5,5000);
+insert into employees values(5,'Spna',7,7000);
+insert into employees values(6,'mngl',7,7000);
+insert into employees values(7,'penelope',1,8000);
+insert into employees values(8,'shweta',1,8000);
+insert into employees values(9,'jyoti',8,5000);
+insert into employees values(10,'dravid',8,6000);
+
+with recursive hierarchy_t as 
+(
+select id,name,mgr_id ,1 as level
+from  employees 
+where name ='penelope'
+
+union all 
+
+select e.id,e.name,e.mgr_id,hierarchy_t.level+1 as level
+from employees e
+join hierarchy_t on hierarchy_t.id=e.mgr_id   ) select * from hierarchy_t;
+
+
+with recursive hierarchy_t as 
+(
+select id,name,mgr_id ,1 as level
+from  employees 
+where name ='marc'
+
+union all 
+
+select e.id,e.name,e.mgr_id,hierarchy_t.level+1 as level
+from employees e
+join hierarchy_t on hierarchy_t.mgr_id=e.id   ) select * from hierarchy_t;
+
