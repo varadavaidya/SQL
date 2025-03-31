@@ -231,7 +231,12 @@ from product;
 
 
 
+--percentile_cont 
 
+select percentile_cont(0.5) within group (order by salary) as median_salary from employee;
+
+--percentile_disc
+select percentile_disc(0.5) within group (order by salary) as median_salary from employee;
 
 
 
