@@ -1,0 +1,41 @@
+CREATE TABLE bank_users (
+    user_id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL,
+    balance NUMERIC(10,2) CHECK (balance >= 0)
+);
+
+INSERT INTO bank_users (name, balance) VALUES
+    ('Alice Johnson', 5200.50),
+    ('Bob Smith', 300.00),
+    ('Charlie Adams', 17500.75),
+    ('David Brown', 250.30),
+    ('Emma Wilson', 9800.00),
+    ('Frank Harris', 120.45),
+    ('Grace Miller', 7150.60),
+    ('Hannah White', 450.90),
+    ('Ian Thomas', 11000.00),
+    ('Jack Roberts', 35.25);
+
+select * from bank_users;
+    
+create or replace procedure transfer_money(sender_id int, receiver_id int,amount int) 
+language plpgsql 
+as $$ 
+begin 
+      if (select balance from bank_users where user_id = sender_id) <amount then
+      raise exception 'invalid balance';
+      end if;
+      
+            update bank_users set bank_users.balance  = bank_users.balance + amount where user_id = receiver_id;
+            update bank_users set bank_users.balance = bank_users.balance - amount where user_id=sender_id;
+            commit;
+          exception
+          when others then rollback;
+          raise; 
+      end; 
+end;
+$$
+
+select transfer_money(1,4,500);
+select * from bank_users;
+          
