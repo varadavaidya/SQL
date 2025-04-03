@@ -1,0 +1,117 @@
+
+
+
+create table sales(
+order_id int,
+order_date date,
+product_code varchar(20),
+quantity_ordered int,
+sale_price int);
+
+
+insert into sales values(1,'2022-01-10','P1',100,120000);
+insert into sales values(2,'2022-01-20','P1',50,60000);
+insert into sales values(3,'2022-02-05','P1',45,540000);
+
+create table products(
+product_code varchar(20),
+product_name varchar(20),
+price int,
+quantity_remaining int,
+quantity_sold int
+);
+
+insert into products values ('P1','13 pro max',1000,5,195);
+insert into products values ('P2','Airpods pro',279,10,90);
+insert into products values('P3','macbook pro 16',5000,2,48);
+insert into products values ('P4','ipad air',650,1,9);
+
+
+explain analyze select * from products where price=5000;
+--select * from products;
+--select * from sales;
+
+--for every phone sale modify database accordingly 
+
+create or replace procedure selling_phone()
+language plpgsql 
+as $$ 
+declare 
+    var_prod_code varchar(20);
+    var_price int;
+begin 
+  begin 
+    select product_code,price
+    into var_prod_code, var_price
+    from products
+    where product_name='13 pro max'
+    limit 1;
+    
+    insert into sales (order_date,product_code,quantity_ordered,sale_price)
+                values(current_date,var_prod_code,1,(var_price*1));
+    update products 
+    set quantity_remaining=(quantity_remaining-1) ,
+        quantity_sold=(quantity_sold+1)
+    where product_code=var_prod_code;
+    commit;
+    
+    raise notice 'product sold!';
+  end;
+end ;
+$$
+
+
+
+--calling a procedure 
+
+
+
+create or replace procedure check_availability(product_code varchar(20), quantity_req int)
+language plpgsql 
+as $$ 
+declare 
+    var_prod_code varchar(20);
+    var_price int;
+begin 
+  begin 
+    select product_code,price
+    into var_prod_code, var_price
+    from products
+    where product_code='13 pro max'
+    limit 1;
+    
+    insert into sales (order_date,product_code,quantity_ordered,sale_price)
+                values(current_date,var_prod_code,1,(var_price*1));
+    update products 
+    set quantity_remaining=(quantity_remaining-1) ,
+        quantity_sold=(quantity_sold+1)
+    where product_code=var_prod_code;
+    commit;
+    
+    raise notice 'product sold!';
+  end;
+end ;
+$$
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
