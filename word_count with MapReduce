@@ -1,0 +1,19 @@
+from pyspark import SparkContext
+
+# Step 1: Create SparkContext
+sc = SparkContext("local", "WordCountApp")
+
+# Step 2: Load the input text file
+text_rdd = sc.textFile("sample.txt")  # Replace with your file path
+
+# Step 3: Map step - split lines into words
+words = text_rdd.flatMap(lambda line: line.split())
+
+# Step 4: Map each word to (word, 1)
+word_pairs = words.map(lambda word: (word, 1))
+
+# Step 5: Reduce step - count by key
+word_counts = word_pairs.reduceByKey(lambda a, b: a + b)
+
+# Step 6: Show results
+word_counts.collect()  # or use .take(10) to print top 10
